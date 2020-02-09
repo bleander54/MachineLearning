@@ -1,0 +1,56 @@
+install.packages("MASS")
+library(MASS)
+fix(Boston)
+names(Boston)
+lm.fit=lm(medv~lstat, data=Boston)
+attach(Boston)
+lm.fit=lm(medv~lstat)
+lm.fit
+summary(lm.fit)
+names(lm.fit)
+coef(lm.fit)
+confint(lm.fit)
+predict(lm.fit, data.frame(lstat=(c(5,10,15))),interval="confidence")
+predict(lm.fit, data.frame(lstat=(c(5,10,15))),interval="prediction")
+
+plot(lstat,medv)
+abline(lm.fit)
+
+par(mfrow=c(2,2))
+plot(predict(lm.fit), residuals(lm.fit))
+plot(predict(lm.fit), rstudent(lm.fit))
+plot(hatvalues(lm.fit))
+which.max(hatvalues(lm.fit))
+
+lm.fit2=lm(medv~lstat+lstat^2)
+
+lab1 = lm(medv~lstat, data=Boston)
+predict(lab1, data.frame(lstat=(c(20))), interval="confidence")
+
+lm.fit1=lm(medv~.-age, data=Boston)
+summary(lm.fit1)
+rstudentdf <- data.frame(rstudent(lm.fit1))
+which.max(rstudent(lm.fit1))
+par(mfrow=c(1,1))
+plot(predict(lm.fit1),rstudent(lm.fit1))
+hatvaluesdf <- data.frame(hatvalues(lm.fit1))
+which.max(hatvalues(lm.fit1))
+cooksddf <- data.frame(cooks.distance(lm.fit1))
+which.max(cooks.distance(lm.fit1))
+
+model1 <- lm(medv~lstat+age+(lstat*age), data=Boston)
+model2 <- lm(medv~lstat+black +(lstat*black), data=Boston)
+anova(model1,model2)
+
+model3 = lm(medv~log(rm), data=Boston)
+summary(model3)
+
+install.packages("ISLR")
+library(ISLR)
+fix(Carseats)
+names(Carseats)
+model4 = lm(Sales~.+(Income*Advertising)+(Price*Age), data=Carseats)
+summary(model4)
+
+model5 = lm(Sales~.+(Income*Advertising)+(Price*Age), data=Carseats, contrasts=list(ShelveLoc=contr.treatment(c("Bad","Good","Medium"),base=3)))
+summary(model5)
